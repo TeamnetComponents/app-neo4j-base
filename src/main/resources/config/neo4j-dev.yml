@@ -1,4 +1,5 @@
 neo:
+  schema: http
   host: localhost
   port: 7474
   user: neo4j

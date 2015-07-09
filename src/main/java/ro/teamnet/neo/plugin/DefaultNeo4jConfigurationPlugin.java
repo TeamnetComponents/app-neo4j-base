@@ -15,7 +15,7 @@ public class DefaultNeo4jConfigurationPlugin implements Neo4jConfigurationPlugin
     }
 
     public GraphDatabaseService graphDatabaseService(){
-        return new SpringRestGraphDatabase("http://"+neoConfig.getHost()+":"+neoConfig.getPort()+
+        return new SpringRestGraphDatabase(neoConfig.getSchema()+"://"+neoConfig.getHost()+":"+neoConfig.getPort()+
                 "/db/data",neoConfig.getUser(),neoConfig.getPassword());
     }
 

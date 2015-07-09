@@ -1,10 +1,19 @@
 package ro.teamnet.neo.config;
 
 public class NeoConfig {
+    private String schema;
     private String host;
     private String port;
     private String user;
     private String password;
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
 
     public void setHost(String host) {
         this.host = host;

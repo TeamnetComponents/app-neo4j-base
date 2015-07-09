@@ -31,6 +31,7 @@ private RelaxedPropertyResolver propertyResolver;
 
     private NeoConfig neoConfig() {
         NeoConfig ret = new NeoConfig();
+        ret.setSchema(propertyResolver.getProperty("schema"));
         ret.setHost(propertyResolver.getProperty("host"));
         ret.setPort(propertyResolver.getProperty("port"));
         ret.setUser(propertyResolver.getProperty("user"));
