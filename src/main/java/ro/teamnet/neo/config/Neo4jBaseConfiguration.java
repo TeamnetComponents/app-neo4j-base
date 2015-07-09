@@ -21,6 +21,7 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
     @ConditionalOnBean(name = "neo4jConfigurationPluginRegistry")
     public GraphDatabaseService graphDatabaseService(@Qualifier("neo4jConfigurationPluginRegistry")
                                                          PluginRegistry<Neo4jConfigurationPlugin, Neo4JType> neo4jConfigurationPluginRegistry) {
+        super.setBasePackage("ro.teamnet.ou.domain.neo");
         return neo4jConfigurationPluginRegistry.getPluginFor(
                 Neo4JType.NEO_4J_CONFIGURATION,
                 neo4jConfigurationPluginRegistry.getPluginFor(
