@@ -10,6 +10,10 @@ import org.springframework.data.neo4j.cross_store.config.CrossStoreNeo4jConfigur
 import org.springframework.plugin.core.PluginRegistry;
 import ro.teamnet.neo.plugin.Neo4JType;
 import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
+import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("SpringFacetCodeInspection")
 @Configuration
@@ -19,9 +23,20 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "neo4jConfigurationPluginRegistry")
-    public GraphDatabaseService graphDatabaseService(@Qualifier("neo4jConfigurationPluginRegistry")
-                                                         PluginRegistry<Neo4jConfigurationPlugin, Neo4JType> neo4jConfigurationPluginRegistry) {
-        super.setBasePackage("ro.teamnet.ou.domain.neo");
+    public GraphDatabaseService graphDatabaseService(
+            @Qualifier("neo4jConfigurationPluginRegistry")
+            PluginRegistry<Neo4jConfigurationPlugin, Neo4JType> neo4jConfigurationPluginRegistry,
+            @Qualifier("neoPackagesToScanPluginRegistry")
+            PluginRegistry<NeoPackagesToScanPlugin, Neo4JType> neoPackagesToScanPluginRegistry
+    ) {
+
+        List<NeoPackagesToScanPlugin> defaultNeoPackagesToScanPlugins=neoPackagesToScanPluginRegistry.getPluginsFor(Neo4JType.PACKAGE_TO_SCAN);
+        List<String> neoPackages=new ArrayList<>();
+        for (NeoPackagesToScanPlugin defaultNeoPackagesToScanPlugin : defaultNeoPackagesToScanPlugins) {
+                neoPackages.addAll(defaultNeoPackagesToScanPlugin.packagesToScan());
+        }
+
+        super.setBasePackage(neoPackages.toArray(new String[neoPackages.size()]));
         return neo4jConfigurationPluginRegistry.getPluginFor(
                 Neo4JType.NEO_4J_CONFIGURATION,
                 neo4jConfigurationPluginRegistry.getPluginFor(

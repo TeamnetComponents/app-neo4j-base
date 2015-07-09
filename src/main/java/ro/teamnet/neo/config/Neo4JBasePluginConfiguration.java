@@ -15,10 +15,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ro.teamnet.neo.plugin.DefaultNeo4jConfigurationPlugin;
+import ro.teamnet.neo.plugin.DefaultNeoPackagesToScanPlugin;
 import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
+import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
 
 @Configuration
-@EnablePluginRegistries(Neo4jConfigurationPlugin.class)
+@EnablePluginRegistries({Neo4jConfigurationPlugin.class, NeoPackagesToScanPlugin.class})
 @ComponentScan(basePackages = {"ro.teamnet.neo.plugin"})
 @EnableTransactionManagement
 
@@ -41,7 +43,6 @@ private RelaxedPropertyResolver propertyResolver;
     public Neo4jConfigurationPlugin defaultNeo4jConfigurationPlugin(){
         return new DefaultNeo4jConfigurationPlugin(neoConfig());
     }
-
 
     @Override
     public void setEnvironment(Environment environment) {
