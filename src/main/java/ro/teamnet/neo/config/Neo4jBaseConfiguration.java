@@ -2,7 +2,6 @@ package ro.teamnet.neo.config;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -22,7 +21,6 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
 
     @Bean
-    @ConditionalOnBean(name = "neo4jConfigurationPluginRegistry")
     public GraphDatabaseService graphDatabaseService(
             @Qualifier("neo4jConfigurationPluginRegistry")
             PluginRegistry<Neo4jConfigurationPlugin, Neo4JType> neo4jConfigurationPluginRegistry,
