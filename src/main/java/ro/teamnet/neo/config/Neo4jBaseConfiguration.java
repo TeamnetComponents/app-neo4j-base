@@ -8,6 +8,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.neo4j.cross_store.config.CrossStoreNeo4jConfiguration;
 import org.springframework.plugin.core.PluginRegistry;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ro.teamnet.neo.plugin.Neo4JType;
 import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
 import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
@@ -20,6 +21,7 @@ import java.util.List;
 @Configuration
 @Import(Neo4JBasePluginConfiguration.class)
 @DependsOn("entityManagerFactory")
+@EnableTransactionManagement
 public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
     @Bean

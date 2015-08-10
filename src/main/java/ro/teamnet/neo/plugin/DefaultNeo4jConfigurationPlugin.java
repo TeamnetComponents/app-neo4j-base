@@ -4,8 +4,7 @@ import org.neo4j.graphdb.GraphDatabaseService;
 import org.springframework.data.neo4j.rest.SpringRestGraphDatabase;
 import ro.teamnet.neo.config.NeoConfig;
 
-public class DefaultNeo4jConfigurationPlugin implements Neo4jConfigurationPlugin{
-
+public class DefaultNeo4jConfigurationPlugin implements Neo4jConfigurationPlugin {
 
 
     private NeoConfig neoConfig;
@@ -14,14 +13,13 @@ public class DefaultNeo4jConfigurationPlugin implements Neo4jConfigurationPlugin
         this.neoConfig = neoConfig;
     }
 
-    public GraphDatabaseService graphDatabaseService(){
-        return new SpringRestGraphDatabase(neoConfig.getSchema()+"://"+neoConfig.getHost()+":"+neoConfig.getPort()+
-                "/db/data",neoConfig.getUser(),neoConfig.getPassword());
+    public GraphDatabaseService graphDatabaseService() {
+        String neoDbUri = neoConfig.getSchema() + "://" + neoConfig.getHost() + ":" + neoConfig.getPort() + "/db/data";
+        return new SpringRestGraphDatabase(neoDbUri, neoConfig.getUser(), neoConfig.getPassword());
     }
-
 
     @Override
     public boolean supports(Neo4JType delimiter) {
-        return delimiter==Neo4JType.DEFAULT_NEO_4J_CONFIGURATION;
+        return delimiter == Neo4JType.DEFAULT_NEO_4J_CONFIGURATION;
     }
 }
