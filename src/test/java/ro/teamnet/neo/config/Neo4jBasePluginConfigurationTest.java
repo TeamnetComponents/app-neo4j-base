@@ -14,10 +14,10 @@ import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
 import javax.inject.Inject;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {Neo4jBaseConfiguration.class})
+@ContextConfiguration(classes = {Neo4JBasePluginConfiguration.class})
 
 @ActiveProfiles("dev")
-public class Neo4jBaseConfigurationTest {
+public class Neo4jBasePluginConfigurationTest {
     @Inject
     @Qualifier("neo4jConfigurationPluginRegistry")
     private PluginRegistry<Neo4jConfigurationPlugin,Neo4JType> neo4jConfigurationPluginRegistry;
