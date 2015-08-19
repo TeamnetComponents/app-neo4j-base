@@ -3,20 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	
+
     <parent>
         <groupId>ro.teamnet.neo</groupId>
         <artifactId>app-neo4j-dependencies</artifactId>
         <version>0.2-SNAPSHOT</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <artifactId>app-neo4j-base</artifactId>
     <packaging>jar</packaging>
-	<properties>
+    <properties>
         <bootstrap.version>0.2-SNAPSHOT</bootstrap.version>
         <spring-data-neo4j.version>3.2.1.RELEASE</spring-data-neo4j.version>
-	</properties>
+    </properties>
     <distributionManagement>
         <repository>
             <id>tni-hq-artifact</id>
@@ -38,11 +38,25 @@
     </repositories>
 
     <dependencies>
-
-
+        <dependency>
+            <groupId>org.liquigraph</groupId>
+            <artifactId>liquigraph-core</artifactId>
+            <version>1.0-UNOFFICIAL_RC</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4</version>
+        </dependency>
     </dependencies>
-	
-	<build>
+
+    <build>
         <plugins>
             <!--<plugin>-->
                 <!--<groupId>org.liquigraph</groupId>-->
@@ -64,7 +78,7 @@
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
-			<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>

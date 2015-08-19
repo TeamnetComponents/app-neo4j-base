@@ -102,7 +102,7 @@ public class Neo4JBasePluginConfiguration {
     }
 
 
-    //@Bean
+    @Bean
     public Liquigraph liquigraph(
             @Qualifier("liquigraphChangelogPathPluginRegistry") PluginRegistry<LiquigraphChangelogPathPlugin, Neo4JType>
                     liquigraphChangelogPathPluginRegistry
