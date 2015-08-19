@@ -44,6 +44,26 @@
 	
 	<build>
         <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.liquigraph</groupId>-->
+                <!--<artifactId>liquigraph-maven-plugin</artifactId>-->
+                <!--<version>1.0.RC2</version>-->
+                <!--<configuration>-->
+                    <!--<changelog>config/liquigraph/changelog/master.xml</changelog>&lt;!&ndash; classpath location &ndash;&gt;-->
+                    <!--<jdbcUri>jdbc:neo4j://localhost:7474</jdbcUri>-->
+                    <!--<username>neo4j</username>-->
+                    <!--<password>1234%asd</password>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>run-migrations</id>-->
+                        <!--<goals>-->
+                            <!--<goal>dry-run</goal>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 			<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
