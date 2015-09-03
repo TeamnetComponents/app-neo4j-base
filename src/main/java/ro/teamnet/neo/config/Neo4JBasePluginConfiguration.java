@@ -37,13 +37,15 @@ public class Neo4JBasePluginConfiguration {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private NeoConfig neoConfig() {
-        NeoConfig ret = new NeoConfig();
-        ret.setSchema(propertyResolver.getProperty("schema"));
-        ret.setHost(propertyResolver.getProperty("host"));
-        ret.setPort(propertyResolver.getProperty("port"));
-        ret.setUser(propertyResolver.getProperty("user"));
-        ret.setPassword(propertyResolver.getProperty("password"));
-        return ret;
+        NeoConfig neoConfig = new NeoConfig();
+        neoConfig.setSchema(propertyResolver.getProperty("schema"));
+        neoConfig.setHost(propertyResolver.getProperty("host"));
+        neoConfig.setPort(propertyResolver.getProperty("port"));
+        neoConfig.setUser(propertyResolver.getProperty("user"));
+        neoConfig.setPassword(propertyResolver.getProperty("password"));
+        neoConfig.setUseEmbeddedDatabase(propertyResolver.getProperty("useEmbeddedDatabase", Boolean.class, false));
+        neoConfig.setEmbeddedDatabasePath(propertyResolver.getProperty("embeddedDatabasePath"));
+        return neoConfig;
     }
 
     @Bean
@@ -107,6 +109,13 @@ public class Neo4JBasePluginConfiguration {
             @Qualifier("liquigraphChangelogPathPluginRegistry") PluginRegistry<LiquigraphChangelogPathPlugin, Neo4JType>
                     liquigraphChangelogPathPluginRegistry
     ) {
+        Liquigraph liquigraph = new Liquigraph();
+        NeoConfig neoConfig = neoConfig();
+
+        if (neoConfig.getUseEmbeddedDatabase()) {
+            log.debug("Liquigraph not supported for embedded databases. Changelogs cannot be migrated!");
+            return liquigraph;
+        }
 
         log.debug("Running liquigraph migrations");
         LiquigraphChangelogPathPlugin defaultLiquigraphChangelogPathPlugin = liquigraphChangelogPathPluginRegistry
@@ -114,12 +123,11 @@ public class Neo4JBasePluginConfiguration {
         List<LiquigraphChangelogPathPlugin> liquigraphChangelogPathPlugins = liquigraphChangelogPathPluginRegistry
                 .getPluginsFor(Neo4JType.LIQUIGRAPH_CHANGELOG_PATH, Arrays.asList(defaultLiquigraphChangelogPathPlugin));
 
-        Liquigraph liquigraph = new Liquigraph();
+
         for (LiquigraphChangelogPathPlugin liquigraphChangelogPathPlugin : liquigraphChangelogPathPlugins) {
             String liquigraphChangelogPath = liquigraphChangelogPathPlugin.liquigraphChangelogPath();
             log.debug("Running liquigraph migrations from : " + liquigraphChangelogPath);
-            LiquigraphConfiguration liquigraphConfiguration = new LiquigraphConfiguration(neoConfig(), liquigraphChangelogPath);
-            liquigraph.runMigrations(liquigraphConfiguration.getConfiguration());
+            liquigraph.runMigrations(new LiquigraphConfiguration(neoConfig, liquigraphChangelogPath).getConfiguration());
         }
         return liquigraph;
     }
