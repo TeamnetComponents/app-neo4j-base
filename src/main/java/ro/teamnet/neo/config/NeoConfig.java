@@ -6,6 +6,8 @@ public class NeoConfig {
     private String port;
     private String user;
     private String password;
+    private Boolean useEmbeddedDatabase;
+    private String embeddedDatabasePath;
 
     public String getSchema() {
         return schema;
@@ -45,5 +47,21 @@ public class NeoConfig {
 
     public String getPassword() {
         return password;
+    }
+
+    public Boolean getUseEmbeddedDatabase() {
+        return useEmbeddedDatabase;
+    }
+
+    public void setUseEmbeddedDatabase(Boolean useEmbeddedDatabase) {
+        this.useEmbeddedDatabase = useEmbeddedDatabase;
+    }
+
+    public String getEmbeddedDatabasePath() {
+        return embeddedDatabasePath;
+    }
+
+    public void setEmbeddedDatabasePath(String embeddedDatabasePath) {
+        this.embeddedDatabasePath = embeddedDatabasePath;
     }
 }

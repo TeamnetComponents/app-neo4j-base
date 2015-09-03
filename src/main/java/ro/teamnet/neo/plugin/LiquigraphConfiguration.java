@@ -18,15 +18,20 @@ public class LiquigraphConfiguration {
     }
 
     public Configuration getConfiguration() {
-        Configuration liquigraphConfiguration = new ConfigurationBuilder()
+        ConfigurationBuilder liquigraphConfigurationBuilder = new ConfigurationBuilder()
                 .withMasterChangelogLocation(liquigraphChangelogPath)
+                .withRunMode();
+
+        if (neoConfig.getUseEmbeddedDatabase()) {
+            return liquigraphConfigurationBuilder
+                    .withUri("jdbc:neo4j:file:" + neoConfig.getEmbeddedDatabasePath())
+                    .build();
+        }
+
+        return liquigraphConfigurationBuilder
                 .withUri("jdbc:neo4j://" + neoConfig.getHost() + ":" + neoConfig.getPort())
                 .withUsername(neoConfig.getUser())
                 .withPassword(neoConfig.getPassword())
-                .withRunMode()
                 .build();
-
-        return liquigraphConfiguration;
-
     }
 }

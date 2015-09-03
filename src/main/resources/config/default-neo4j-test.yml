@@ -5,4 +5,4 @@ neo:
   user: neo4j
   password: 1234
   useEmbeddedDatabase: false
-  embeddedDatabasePath: embedded_Db
+  embeddedDatabasePath: test_Db
