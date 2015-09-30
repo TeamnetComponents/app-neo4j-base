@@ -14,7 +14,7 @@
     <artifactId>app-neo4j-base</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <bootstrap.version>0.2-SNAPSHOT</bootstrap.version>
+        <bootstrap.version>0.2.7-SNAPSHOT</bootstrap.version>
         <spring-data-neo4j.version>3.2.1.RELEASE</spring-data-neo4j.version>
     </properties>
     <distributionManagement>
