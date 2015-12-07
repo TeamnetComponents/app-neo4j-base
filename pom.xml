@@ -11,9 +11,7 @@
 
     <artifactId>app-neo4j-base</artifactId>
     <packaging>jar</packaging>
-    <properties>
-        <spring-data-neo4j.version>3.2.1.RELEASE</spring-data-neo4j.version>
-    </properties>
+    
     <distributionManagement>
         <repository>
             <id>tni-hq-artifact</id>
