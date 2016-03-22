@@ -21,7 +21,9 @@ import java.util.List;
 @SuppressWarnings("SpringFacetCodeInspection")
 @Configuration
 @Import(Neo4JBasePluginConfiguration.class)
-public class Neo4jBaseConfiguration extends Neo4jConfiguration {
+@DependsOn("entityManagerFactory")
+@EnableTransactionManagement
+public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
     @Bean
     public GraphDatabaseService graphDatabaseService(
@@ -38,6 +40,7 @@ public class Neo4jBaseConfiguration extends Neo4jConfiguration {
         }
 
         super.setBasePackage(neoPackages.toArray(new String[neoPackages.size()]));
+        setEntityManagerFactory(null);
 
         return neo4jConfigurationPluginRegistry.getPluginFor(
                 Neo4JType.NEO_4J_CONFIGURATION,
@@ -47,5 +50,8 @@ public class Neo4jBaseConfiguration extends Neo4jConfiguration {
 
     }
 
-
+    @Override
+    public boolean isUsingCrossStorePersistence() {
+        return false;
+    }
 }
