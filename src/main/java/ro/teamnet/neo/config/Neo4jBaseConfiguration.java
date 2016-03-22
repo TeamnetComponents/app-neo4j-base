@@ -60,10 +60,10 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
         return false;
     }
 
-    @Bean(name = "crossStoreTransactionManager")
-    public PlatformTransactionManager crossStoreTransactionManager() throws Exception {
+    @Bean(name="crossStoreTransactionManager")
+    public PlatformTransactionManager crossStoreTransactionManager(EntityManagerFactory emf) throws Exception {
         JtaTransactionManager jtaTm = new JtaTransactionManagerFactoryBean( getGraphDatabaseService() ).getObject();
-        JpaTransactionManager jpaTm = new JpaTransactionManager(getEntityManagerFactory());
+        JpaTransactionManager jpaTm = new JpaTransactionManager(emf);
         return new ChainedTransactionManager(jpaTm, jtaTm);
     }
 }
