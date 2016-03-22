@@ -6,10 +6,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.cross_store.config.CrossStoreNeo4jConfiguration;
+import org.springframework.data.transaction.ChainedTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.plugin.core.PluginRegistry;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.jta.JtaTransactionManager;
 import ro.teamnet.neo.plugin.Neo4JType;
 import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
 import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
@@ -53,5 +58,12 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
     @Override
     public boolean isUsingCrossStorePersistence() {
         return false;
+    }
+
+    @Bean(name = "crossStoreTransactionManager")
+    public PlatformTransactionManager crossStoreTransactionManager() throws Exception {
+        JtaTransactionManager jtaTm = new JtaTransactionManagerFactoryBean( getGraphDatabaseService() ).getObject();
+        JpaTransactionManager jpaTm = new JpaTransactionManager(getEntityManagerFactory());
+        return new ChainedTransactionManager(jpaTm, jtaTm);
     }
 }
