@@ -27,8 +27,6 @@ import java.util.List;
 @Configuration
 @EnablePluginRegistries({Neo4jConfigurationPlugin.class, NeoPackagesToScanPlugin.class, Neo4jResourcePropertiesPathPlugin.class, LiquigraphChangelogPathPlugin.class})
 @ComponentScan(basePackages = {"ro.teamnet.neo.plugin"})
-@EnableTransactionManagement
-
 public class Neo4JBasePluginConfiguration {
 
     private RelaxedPropertyResolver propertyResolver;
