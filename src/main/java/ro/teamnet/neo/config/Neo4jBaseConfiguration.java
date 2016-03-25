@@ -20,13 +20,14 @@ import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
 import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("SpringFacetCodeInspection")
 @Configuration
 @Import(Neo4JBasePluginConfiguration.class)
-@DependsOn("entityManagerFactory")
+@DependsOn({"entityManagerFactory","jpaTransactionManager"})
 @EnableTransactionManagement
 public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
@@ -38,10 +39,10 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
             PluginRegistry<NeoPackagesToScanPlugin, Neo4JType> neoPackagesToScanPluginRegistry
     ) {
 
-        List<NeoPackagesToScanPlugin> defaultNeoPackagesToScanPlugins=neoPackagesToScanPluginRegistry.getPluginsFor(Neo4JType.PACKAGE_TO_SCAN);
-        List<String> neoPackages=new ArrayList<>();
+        List<NeoPackagesToScanPlugin> defaultNeoPackagesToScanPlugins = neoPackagesToScanPluginRegistry.getPluginsFor(Neo4JType.PACKAGE_TO_SCAN);
+        List<String> neoPackages = new ArrayList<>();
         for (NeoPackagesToScanPlugin defaultNeoPackagesToScanPlugin : defaultNeoPackagesToScanPlugins) {
-                neoPackages.addAll(defaultNeoPackagesToScanPlugin.packagesToScan());
+            neoPackages.addAll(defaultNeoPackagesToScanPlugin.packagesToScan());
         }
 
         super.setBasePackage(neoPackages.toArray(new String[neoPackages.size()]));
@@ -55,15 +56,24 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
     }
 
+    @Bean(name = "neo4jTransactionManager")
+    @Override
+    public PlatformTransactionManager neo4jTransactionManager() throws Exception {
+
+        return new JtaTransactionManagerFactoryBean(getGraphDatabaseService()).getObject();
+    }
+
     @Override
     public boolean isUsingCrossStorePersistence() {
         return false;
     }
 
-    @Bean(name="crossStoreTransactionManager")
-    public PlatformTransactionManager crossStoreTransactionManager(EntityManagerFactory emf) throws Exception {
-        JtaTransactionManager jtaTm = new JtaTransactionManagerFactoryBean( getGraphDatabaseService() ).getObject();
-        JpaTransactionManager jpaTm = new JpaTransactionManager(emf);
-        return new ChainedTransactionManager(jpaTm, jtaTm);
+    @Bean(name = "crossStoreTransactionManager")
+    public PlatformTransactionManager crossStoreTransactionManager(
+            @Qualifier("neo4jTransactionManager") PlatformTransactionManager neo4jTransactionManager,
+            @Qualifier("jpaTransactionManager") PlatformTransactionManager jpaTransactionManager) {
+
+        return new ChainedTransactionManager(jpaTransactionManager, neo4jTransactionManager);
     }
+
 }
