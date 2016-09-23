@@ -5,13 +5,13 @@
     <parent>
         <groupId>ro.teamnet.neo</groupId>
         <artifactId>app-neo4j-dependencies</artifactId>
-        <version>0.4-SNAPSHOT</version>
+        <version>0.5</version>
         <relativePath />
     </parent>
 
     <artifactId>app-neo4j-base</artifactId>
     <packaging>jar</packaging>
-    
+
     <distributionManagement>
         <repository>
             <id>tni-hq-artifact</id>
