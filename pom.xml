@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>app-neo4j-base</artifactId>
-    <version>0.7</version>
+    <version>0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <bootstrap.version>0.2-SNAPSHOT</bootstrap.version>
@@ -58,7 +58,7 @@
     <scm>
         <url>http://git-components.teamnet.ro/summary/components%2Fjava%2Fplatform-extensions%2Fapp-neo4j-base.git</url>
         <connection>scm:git:http://component-publisher@git-components.teamnet.ro/r/components/java/platform-extensions/app-neo4j-base.git</connection>
-        <tag>v0.7</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
