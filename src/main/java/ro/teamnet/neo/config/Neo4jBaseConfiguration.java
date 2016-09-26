@@ -6,21 +6,28 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.neo4j.config.JtaTransactionManagerFactoryBean;
+import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.cross_store.config.CrossStoreNeo4jConfiguration;
+import org.springframework.data.transaction.ChainedTransactionManager;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.plugin.core.PluginRegistry;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.jta.JtaTransactionManager;
 import ro.teamnet.neo.plugin.Neo4JType;
 import ro.teamnet.neo.plugin.Neo4jConfigurationPlugin;
 import ro.teamnet.neo.plugin.NeoPackagesToScanPlugin;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("SpringFacetCodeInspection")
 @Configuration
 @Import(Neo4JBasePluginConfiguration.class)
-@DependsOn("entityManagerFactory")
+@DependsOn({"entityManagerFactory","jpaTransactionManager"})
 @EnableTransactionManagement
 public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
@@ -29,18 +36,17 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
             @Qualifier("neo4jConfigurationPluginRegistry")
             PluginRegistry<Neo4jConfigurationPlugin, Neo4JType> neo4jConfigurationPluginRegistry,
             @Qualifier("neoPackagesToScanPluginRegistry")
-            PluginRegistry<NeoPackagesToScanPlugin, Neo4JType> neoPackagesToScanPluginRegistry,
-            EntityManagerFactory emf
+            PluginRegistry<NeoPackagesToScanPlugin, Neo4JType> neoPackagesToScanPluginRegistry
     ) {
 
-        List<NeoPackagesToScanPlugin> defaultNeoPackagesToScanPlugins=neoPackagesToScanPluginRegistry.getPluginsFor(Neo4JType.PACKAGE_TO_SCAN);
-        List<String> neoPackages=new ArrayList<>();
+        List<NeoPackagesToScanPlugin> defaultNeoPackagesToScanPlugins = neoPackagesToScanPluginRegistry.getPluginsFor(Neo4JType.PACKAGE_TO_SCAN);
+        List<String> neoPackages = new ArrayList<>();
         for (NeoPackagesToScanPlugin defaultNeoPackagesToScanPlugin : defaultNeoPackagesToScanPlugins) {
-                neoPackages.addAll(defaultNeoPackagesToScanPlugin.packagesToScan());
+            neoPackages.addAll(defaultNeoPackagesToScanPlugin.packagesToScan());
         }
 
         super.setBasePackage(neoPackages.toArray(new String[neoPackages.size()]));
-        setEntityManagerFactory(emf);
+        setEntityManagerFactory(null);
 
         return neo4jConfigurationPluginRegistry.getPluginFor(
                 Neo4JType.NEO_4J_CONFIGURATION,
@@ -50,5 +56,24 @@ public class Neo4jBaseConfiguration extends CrossStoreNeo4jConfiguration {
 
     }
 
+    @Bean(name = "neo4jTransactionManager")
+    @Override
+    public PlatformTransactionManager neo4jTransactionManager() throws Exception {
+
+        return new JtaTransactionManagerFactoryBean(getGraphDatabaseService()).getObject();
+    }
+
+    @Override
+    public boolean isUsingCrossStorePersistence() {
+        return false;
+    }
+
+    @Bean(name = "crossStoreTransactionManager")
+    public PlatformTransactionManager crossStoreTransactionManager(
+            @Qualifier("neo4jTransactionManager") PlatformTransactionManager neo4jTransactionManager,
+            @Qualifier("jpaTransactionManager") PlatformTransactionManager jpaTransactionManager) {
+
+        return new ChainedTransactionManager(jpaTransactionManager, neo4jTransactionManager);
+    }
 
 }
