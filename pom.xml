@@ -5,7 +5,7 @@
     <parent>
         <groupId>ro.teamnet.neo</groupId>
         <artifactId>app-neo4j-dependencies</artifactId>
-        <version>0.7</version>
+        <version>0.8</version>
         <relativePath />
     </parent>
 
@@ -13,7 +13,7 @@
     <version>0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
-        <bootstrap.version>0.2-SNAPSHOT</bootstrap.version>
+        <bootstrap.version>0.2.16</bootstrap.version>
         <spring-data-neo4j.version>3.2.1.RELEASE</spring-data-neo4j.version>
     </properties>
     <distributionManagement>
@@ -114,6 +114,9 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
